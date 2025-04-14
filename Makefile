@@ -8,10 +8,18 @@ all:
 	docker_clean
 
 docker_build:
-	docker build -t ${IMAGE_NAME}:${IMAGE_TAG} --rm .
+	docker build \
+		--build-arg http_proxy=${HTTP_PROXY} \
+		--build-arg https_proxy=${HTTPS_PROXY} \
+		--build-arg no_proxy=${NO_PROXY} \
+		-t ${IMAGE_NAME}:${IMAGE_TAG} --rm .
 
 docker_build_no_entrypoint:
-	docker build -f flairhub_noentrypoint.dockerfile -t ${IMAGE_NAME}:${IMAGE_TAG}_no_entrypoint --rm .
+	docker build \
+	--build-arg http_proxy=${HTTP_PROXY} \
+	--build-arg https_proxy=${HTTPS_PROXY} \
+	--build-arg no_proxy=${NO_PROXY} \
+	-f flairhub_noentrypoint.dockerfile -t ${IMAGE_NAME}:${IMAGE_TAG}_no_entrypoint --rm .
 
 docker_run:
 	docker run --gpus all --ipc host --rm \

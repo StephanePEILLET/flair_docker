@@ -7,9 +7,9 @@ ARG http_proxy=""
 ARG https_proxy=""
 ARG no_proxy=""
 
-ENV http_proxy="http://proxy.ign.fr:3128"
-ENV https_proxy="http://proxy.ign.fr:3128"
-ENV no_proxy="localhost,127.0.0.1"
+ENV http_proxy=${http_proxy}
+ENV https_proxy=${https_proxy}
+ENV no_proxy=${no_proxy}
 
 # Nécessaire pour éviter les messages d'erreur issue de l'installation de libgl1
 ARG DEBIAN_FRONTEND=noninteractive
