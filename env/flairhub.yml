@@ -1,0 +1,31 @@
+name: flairhub
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - cudatoolkit
+  - cudnn
+  - pytorch>=2.0.0=py3.12_cuda12.4_cudnn9.1.0_0
+  - torchvision
+  - matplotlib
+  - geopandas>=0.10
+  - rasterio>=1.1.5
+  - omegaconf
+  - jsonargparse
+  - pandas
+  - scikit-image>=0.22.0
+  - scikit-learn
+  - pillow>=9.3.0
+  - torchmetrics=1.2.0
+  - pytorch-lightning=2.1.1
+  - transformers<4.51.0
+  - segmentation-models-pytorch=0.4.0
+  - opencv=4.11.0
+  - matplotlib
+  - pip
+  - albumentations=2.0.5
+  - rich
+  - tensorboard

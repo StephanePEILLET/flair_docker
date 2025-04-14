@@ -1,0 +1,50 @@
+Bootstrap: docker
+From: condaforge/mambaforge
+
+%arguments
+    http_proxy="http://proxy.ign.fr:3128"
+    https_proxy="http://proxy.ign.fr:3128"
+    no_proxy="localhost,127.0.0.1"
+
+%environment
+    export http_proxy="http://proxy.ign.fr:3128"
+    export https_proxy="http://proxy.ign.fr:3128"
+    export no_proxy="localhost,127.0.0.1"
+    export DEBIAN_FRONTEND=noninteractive
+    export MAMBA_ROOT_PREFIX='/opt/conda'
+
+%post
+    # Configuration proxy pour apt-get
+    echo 'Acquire::http::Proxy "http://proxy.ign.fr:3128";' > /etc/apt/apt.conf.d/proxy.conf
+    echo 'Acquire::https::Proxy "http://proxy.ign.fr:3128";' >> /etc/apt/apt.conf.d/proxy.conf
+
+    # Installation des dépendances système
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -fy fish ranger zip libgl1 libglib2.0-0 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+    # Mise à jour de conda
+    mamba update -n base -c conda-forge conda
+
+    # Création de l'environnement conda
+    mkdir -p /app
+    cp /home/flairhub.yml /app/flairhub.yml
+    mamba env create -f /app/flairhub.yml
+
+    # Nettoyage
+    mamba clean --all --yes
+    apt-get clean
+    apt-get autoremove -y
+
+%files
+    env/flairhub.yml /home/flairhub.yml
+    src /app/src
+
+%runscript
+    exec mamba run -n flairhub python /app/src/flair_inc/main.py "$@"
+
+%labels
+    Author Stéphane PEILLET
+    Version 1.0
