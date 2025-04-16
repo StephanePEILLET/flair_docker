@@ -1,0 +1,6 @@
+Bootstrap: docker-daemon
+From: flairhub:v1.0
+Stage: build
+
+%runscript
+    exec mamba run -n flairhub python /app/src/flair_inc/main.py "$@"

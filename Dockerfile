@@ -27,7 +27,7 @@ RUN mamba update -n base -c conda-forge conda
 COPY env/flairhub.yml /home/flairhub.yml
 RUN mamba env create --file=/home/flairhub.yml
 
-#Definition du bash qui sera utilisé
+# Definition du bash qui sera utilisé
 SHELL ["mamba", "run", "-n", "flairhub", "/bin/bash", "-c"]
 
 # Nettoyage
