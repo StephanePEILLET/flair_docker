@@ -1,1 +1,1 @@
-<a href="pdfs/documentation.pdf" class="image fit" type="application/pdf"></a>
+[Documentation](pdfs/documentation.pdf)
