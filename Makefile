@@ -1,8 +1,8 @@
 include config.env
 
-.PHONY: all docker_build docker_run docker_build_no_entrypoint docker_push docker_push docker_clean apptainer_build_from_docker apptainer_build apptainer_run apptainer_clean docker_free_space
+.PHONY: all docker_build docker_run docker_build_no_entrypoint docker_push docker_push docker_clean singularity_build_from_docker singularity_build singularity_run singularity_clean docker_free_space
 
-all: 
+all:
 	docker_build
 	docker_run
 	docker_clean
@@ -40,16 +40,17 @@ docker_push:
 docker_clean:
 	docker image rmi ${IMAGE_NAME}:${IMAGE_TAG}
 
-apptainer_build_from_docker:
-	singularity build --fakeroot ${IMAGE_NAME}_${IMAGE_TAG}.sif docker-daemon://${IMAGE_NAME}:${IMAGE_TAG}
+singularity_build_from_docker:
+	singularity build --fakeroot ${IMAGE_NAME}_${IMAGE_TAG}.sif flairhub.def  
+#singularity build --fakeroot --disable-cache ${IMAGE_NAME}_${IMAGE_TAG}.sif docker-daemon://${IMAGE_NAME}:${IMAGE_TAG} # cas sans rééciture de l'entrypoint
 
-apptainer_build_from_dockerhub:
-	singularity build --fakeroot --no-https --no-cleanup ${IMAGE_NAME}_${IMAGE_TAG}.sif  docker://${USER_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
+singularity_build_from_dockerhub:
+	singularity build --fakeroot --no-https --no-cleanup ${IMAGE_NAME}_${IMAGE_TAG}.sif docker://${USER_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
 
-apptainer_build:
+singularity_build:
 	singularity build --fakeroot ${IMAGE_NAME}_${IMAGE_TAG}.sif flairhub_singularity.def
 
-apptainer_run:
+singularity_run:
 	singularity exec --nv --fakeroot\
 		--bind ${PATH_DATA}:/data \
 		--bind ${OUTPUT_FOLDER}:/output:rw \
@@ -58,19 +59,16 @@ apptainer_run:
 		${IMAGE_NAME}_${IMAGE_TAG}.sif \
 		mamba run -n flairhub python /app/src/flair_inc/main.py --conf_folder /app/configs/debug_docker
 
-apptainer_shell:
+singularity_shell:
 	singularity exec --nv --fakeroot\
 		--bind ${PATH_DATA}:/data \
 		--bind ${OUTPUT_FOLDER}:/output:rw \
 		--bind ${CODE_REPO}:/app \
 		--bind ${CSV_FOLDER}:/csvs \
-		${SINGULARITY_DIR}/${IMAGE_NAME}_${IMAGE_TAG}.sif \
+		${IMAGE_NAME}_${IMAGE_TAG}.sif \
 		mamba run -n flairhub fish
 
-apptainer_test:
-	singularity build --fakeroot ${IMAGE_NAME}_${IMAGE_TAG}.sif flairhub.def
-
-apptainer_clean:
+singularity_clean:
 	singularity cache clean
 	rm -f ${IMAGE_NAME}_${IMAGE_TAG}.sif
 	rm -f ${IMAGE_NAME}_${IMAGE_TAG}.sif.lock

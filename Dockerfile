@@ -40,3 +40,6 @@ WORKDIR /app
 # Si utilisation du container en interactif avec fish
 ENV MAMBA_ROOT_PREFIX='/opt/conda'
 ENTRYPOINT ["mamba", "run", "-n", "flairhub", "python", "/app/src/flair_inc/main.py"]
+
+# RUN conda init fish
+# CMD fish
